@@ -1,26 +1,33 @@
 import {Await, NavLink} from '@remix-run/react';
-import {Suspense} from 'react';
+import {Suspense, useState} from 'react';
 import type {HeaderQuery} from 'storefrontapi.generated';
-import type {LayoutProps} from './Layout';
 import {useRootLoaderData} from '~/root';
+import {BasketModal} from './BasketModal';
+import {BtnBasket} from './BtnBasket';
+import type {LayoutProps} from './Layout';
 
 type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>;
 
 type Viewport = 'desktop' | 'mobile';
 
 export function Header({header, isLoggedIn, cart}: HeaderProps) {
+  const [isBasketModalOpen, setIsBasketModalOpen] = useState(false);
   const {shop, menu} = header;
   return (
     <header className="header">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+        <strong>Nanushka</strong>
       </NavLink>
-      <HeaderMenu
+      {/* <HeaderMenu
         menu={menu}
         viewport="desktop"
         primaryDomainUrl={header.shop.primaryDomain.url}
+      /> */}
+      <BtnBasket setIsBasketModalOpen={setIsBasketModalOpen} />
+      <BasketModal
+        isOpen={isBasketModalOpen}
+        onClose={() => setIsBasketModalOpen(false)}
       />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
     </header>
   );
 }
